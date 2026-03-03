@@ -1,4 +1,4 @@
-package com.alilopez.kt_demohilt.features.jsonplaceholder.data.di
+package com.alilopez.kt_demohilt.features.jsonplaceholder.di
 
 import com.alilopez.demo.features.jsonplaceholder.data.repositories.PostsRepositoryImpl
 import com.alilopez.demo.features.jsonplaceholder.domain.repositories.PostsRepository

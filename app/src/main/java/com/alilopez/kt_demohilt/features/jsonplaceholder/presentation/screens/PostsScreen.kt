@@ -3,6 +3,7 @@ package com.alilopez.demo.features.jsonplaceholder.presentation.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alilopez.demo.features.jsonplaceholder.presentation.components.PostsCard
 import com.alilopez.demo.features.jsonplaceholder.presentation.viewmodels.PostsViewModel
@@ -34,7 +38,14 @@ import com.alilopez.demo.features.jsonplaceholder.presentation.viewmodels.PostsV
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostsScreen(viewModel : PostsViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    // Si quieres que refresque cada vez que el usuario vuelve a esta pantalla:
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.syncPosts()
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -66,13 +77,17 @@ fun PostsScreen(viewModel : PostsViewModel = hiltViewModel()) {
                 .padding(innerPadding)
         ) {
             when {
-                uiState.isLoading -> {
+                state.isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
 
-                uiState.error != null -> {
+                (state.isSyncing && state.posts.isNotEmpty()) -> {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+                state.error != null -> {
                     Text(
-                        text = uiState.error ?: "Error",
+                        text = state.error ?: "Error",
                         modifier = Modifier.align(Alignment.Center),
                         color = Color.Red
                     )
@@ -83,7 +98,7 @@ fun PostsScreen(viewModel : PostsViewModel = hiltViewModel()) {
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(8.dp)
                     ) {
-                        items(uiState.posts) { post ->
+                        items(state.posts) { post ->
                             PostsCard(
                                 id = post.id,
                                 title = post.title,

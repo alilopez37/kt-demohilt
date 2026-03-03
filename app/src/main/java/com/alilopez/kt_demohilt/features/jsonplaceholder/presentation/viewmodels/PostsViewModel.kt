@@ -6,48 +6,46 @@ import com.alilopez.demo.features.jsonplaceholder.domain.entities.Posts
 import com.alilopez.demo.features.jsonplaceholder.domain.usescases.GetPostsUseCase
 import com.alilopez.demo.features.jsonplaceholder.presentation.screens.PostsUIState
 import com.alilopez.kt_demohilt.core.hardware.domain.FlashManager
+import com.alilopez.kt_demohilt.features.jsonplaceholder.domain.usescases.PostUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class PostsViewModel @Inject constructor(
-    private val getPostsUseCase: GetPostsUseCase,
+    private val postUseCases: PostUseCases,
     private val flashManager: FlashManager
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PostsUIState())
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(PostsUIState())
+    val state = _state.asStateFlow()
 
     init {
-        loadPosts()
+        getPosts()
+        syncPosts()
     }
 
-    private fun loadPosts(){
-        _uiState.update { it.copy(isLoading = true) }
-
-        viewModelScope.launch {
-            val result = getPostsUseCase()
-
-            result.fold(
-                onSuccess = { list ->
-                    _uiState.update { it.copy(isLoading = false, posts = list) }
-
-                    if (flashManager.hasFlash()) {
-                        flashManager.blink(100)
-                    }
-                },
-                onFailure = { error ->
-                    _uiState.update { it.copy(isLoading = false, error = error.message) }
-                }
+    private fun getPosts() {
+        postUseCases.getPosts().onEach { posts ->
+            _state.value = state.value.copy(
+                posts = posts,
+                isLoading = false
             )
-        }
+        }.launchIn(viewModelScope)
     }
 
-    // Encendido manual
-    fun onFlashManual(enable: Boolean) {
-        if (enable) flashManager.turnOn() else flashManager.turnOff()
+    fun syncPosts() {
+        viewModelScope.launch {
+            _state.value = state.value.copy(isSyncing = true)
+            postUseCases.syncPosts()
+            if (flashManager.hasFlash()) {
+                flashManager.blink(100)
+            }
+            _state.value = state.value.copy(isSyncing = false)
+        }
     }
 }

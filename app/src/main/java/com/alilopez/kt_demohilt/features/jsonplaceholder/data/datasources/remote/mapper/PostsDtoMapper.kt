@@ -2,6 +2,7 @@ package com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.mappe
 
 import com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.models.PostsDto
 import com.alilopez.demo.features.jsonplaceholder.domain.entities.Posts
+import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.entities.PostEntity
 
 
 fun PostsDto.toDomain(): Posts {
@@ -11,3 +12,6 @@ fun PostsDto.toDomain(): Posts {
         body = this.body
     )
 }
+
+// Mapper: De Remoto (API) a Local (DB)
+fun PostsDto.toEntity() = PostEntity(id, title, body)
