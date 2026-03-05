@@ -2,8 +2,8 @@ package com.alilopez.kt_demohilt.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.dao.PostDao
-import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.entities.PostEntity
+import com.alilopez.kt_demohilt.core.database.dao.PostDao
+import com.alilopez.kt_demohilt.core.database.entities.PostEntity
 
 @Database(
     entities = [PostEntity::class,

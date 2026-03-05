@@ -1,10 +1,10 @@
-package com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.dao
+package com.alilopez.kt_demohilt.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.entities.PostEntity
+import com.alilopez.kt_demohilt.core.database.entities.PostEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

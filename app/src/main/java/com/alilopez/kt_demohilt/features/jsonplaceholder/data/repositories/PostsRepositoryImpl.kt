@@ -1,11 +1,9 @@
 package com.alilopez.demo.features.jsonplaceholder.data.repositories
 
-import android.util.Log
-import com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.mapper.toDomain
 import com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.mapper.toEntity
 import com.alilopez.demo.features.jsonplaceholder.domain.entities.Posts
 import com.alilopez.demo.features.jsonplaceholder.domain.repositories.PostsRepository
-import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.dao.PostDao
+import com.alilopez.kt_demohilt.core.database.dao.PostDao
 import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.mapper.toDomain
 import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.remote.api.JsonPlaceHolderApi
 import kotlinx.coroutines.flow.Flow

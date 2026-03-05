@@ -2,7 +2,7 @@ package com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.mappe
 
 import com.alilopez.demo.features.jsonplaceholder.data.datasources.remote.models.PostsDto
 import com.alilopez.demo.features.jsonplaceholder.domain.entities.Posts
-import com.alilopez.kt_demohilt.features.jsonplaceholder.data.datasources.local.entities.PostEntity
+import com.alilopez.kt_demohilt.core.database.entities.PostEntity
 
 
 fun PostsDto.toDomain(): Posts {
