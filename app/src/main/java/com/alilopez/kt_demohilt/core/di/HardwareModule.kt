@@ -1,9 +1,9 @@
 package com.alilopez.kt_demohilt.core.di
 
 import com.alilopez.kt_demohilt.core.hardware.data.AndroidFlashManager
-import com.alilopez.kt_demohilt.core.hardware.data.FusedLocationRepository
+import com.alilopez.kt_demohilt.core.hardware.data.AndroidVibrateManager
 import com.alilopez.kt_demohilt.core.hardware.domain.FlashManager
-import com.alilopez.kt_demohilt.core.hardware.domain.LocationRepository
+import com.alilopez.kt_demohilt.core.hardware.domain.VibrateManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,7 +21,7 @@ abstract class HardwareModule {
 
     @Binds
     @Singleton
-    abstract fun bindFusedLocationManager(
-        impl: FusedLocationRepository
-    ): LocationRepository
+    abstract fun bindVibrateManager(
+        impl: AndroidVibrateManager
+    ): VibrateManager
 }
